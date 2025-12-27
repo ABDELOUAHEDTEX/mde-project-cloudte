@@ -28,12 +28,13 @@ public class EndToEndTest {
         vpc.put("cidr", "10.0.0.0/16");
         resources.add(vpc);
         
-        // Subnet
+        // Subnet (with VPC reference)
         Map<String, Object> subnet = new HashMap<>();
         subnet.put("type", "Subnet");
         subnet.put("name", "public-subnet");
         subnet.put("cidr", "10.0.1.0/24");
         subnet.put("typeSubnet", "public");
+        subnet.put("vpc", "main-vpc"); // Required VPC reference
         resources.add(subnet);
         
         // Security Group
@@ -73,7 +74,8 @@ public class EndToEndTest {
         
         assertNotNull(infra);
         assertEquals("AWS", infra.getProvider());
-        assertEquals(6, infra.getResources().size());
+        // Subnet is contained in VPC, so count is 5 (VPC, SG, Compute, Bucket, DB)
+        assertEquals(5, infra.getResources().size());
         
         // Step 2: Generate Terraform
         TerraformGenerator tfGen = new TerraformGenerator();

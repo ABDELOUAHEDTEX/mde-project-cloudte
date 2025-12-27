@@ -57,46 +57,24 @@ public class CompleteNLPTest {
         // Étape 1 : NLP → EMF Model
         Infrastructure infra = modelGen.createModel(nlpJson);
 
-        // Étape 1b : Lier Subnets au VPC (EMF containment)
-        VPC vpc = null;
-        List<Subnet> subnets = new ArrayList<>();
-        
-        // Collecter VPC et Subnets
-        for (CloudResource res : infra.getResources()) {
-            if (res instanceof VPC) {
-                vpc = (VPC) res;
-            } else if (res instanceof Subnet) {
-                subnets.add((Subnet) res);
-            }
-        }
-        
-        // Lier les subnets au VPC
-        if (vpc != null) {
-            for (Subnet subnet : subnets) {
-                vpc.getSubnets().add(subnet);
-            }
-            System.out.println("   ✓ Linked " + subnets.size() + " subnets to VPC");
-        }
+        // Note: Subnet containment is now handled automatically by ModelGenerator
+        // Subnets are contained in VPCs via EMF containment
 
         // Assertions de base
         assertNotNull(infra);
         assertEquals("AWS", infra.getProvider());
         System.out.println("   ✓ Model created with " + infra.getResources().size() + " resources");
-
-        // Vérifier la validation
-        System.out.println("\n🔄 Step 2: Validating Model...");
-        boolean valid = modelGen.validateModel(infra);
-        System.out.println("   Model validation: " + (valid ? "✓ PASSED" : "⚠ WARNINGS"));
+        System.out.println("   Note: Validation was performed before model creation (fail-fast)");
 
         // Générer Terraform
-        System.out.println("\n🔄 Step 3: Generating Terraform Code...");
+        System.out.println("\n🔄 Step 2: Generating Terraform Code...");
         String terraform = tfGen.generate(infra);
         assertNotNull(terraform);
         assertTrue(terraform.length() > 1000);
         System.out.println("   ✓ Generated " + terraform.split("\n").length + " lines of Terraform");
 
         // Sauvegarder fichiers
-        System.out.println("\n🔄 Step 4: Saving Files...");
+        System.out.println("\n🔄 Step 3: Saving Files...");
         Files.createDirectories(Paths.get("output"));
         modelGen.saveModel(infra, "output/ecommerce-model.xmi");
         Files.write(Paths.get("output/ecommerce-infrastructure.tf"), terraform.getBytes());
@@ -123,26 +101,30 @@ public class CompleteNLPTest {
             Map.of("cidr", "10.0.0.0/16",
                    "tags", Arrays.asList("Environment=Production"))));
 
-        // Subnets
+        // Subnets (with VPC references)
         resources.add(createResource("Subnet", "public-subnet-1a", 
             Map.of("cidr", "10.0.1.0/24", 
                    "typeSubnet", "public", 
-                   "availabilityZone", "us-east-1a")));
+                   "availabilityZone", "us-east-1a",
+                   "vpc", "ecommerce-vpc")));
         
         resources.add(createResource("Subnet", "public-subnet-1b", 
             Map.of("cidr", "10.0.2.0/24", 
                    "typeSubnet", "public", 
-                   "availabilityZone", "us-east-1b")));
+                   "availabilityZone", "us-east-1b",
+                   "vpc", "ecommerce-vpc")));
         
         resources.add(createResource("Subnet", "private-subnet-1a", 
             Map.of("cidr", "10.0.11.0/24", 
                    "typeSubnet", "private", 
-                   "availabilityZone", "us-east-1a")));
+                   "availabilityZone", "us-east-1a",
+                   "vpc", "ecommerce-vpc")));
         
         resources.add(createResource("Subnet", "private-subnet-1b", 
             Map.of("cidr", "10.0.12.0/24", 
                    "typeSubnet", "private", 
-                   "availabilityZone", "us-east-1b")));
+                   "availabilityZone", "us-east-1b",
+                   "vpc", "ecommerce-vpc")));
 
         // Security Groups
         resources.add(createResource("SecurityGroup", "web-sg", 
@@ -207,7 +189,12 @@ public class CompleteNLPTest {
         Map<String, Object> resource = new HashMap<>();
         resource.put("type", type);
         resource.put("name", name);
-        resource.putAll(props);
+        // Put props first, then override with type and name to ensure they're not overwritten
+        for (Map.Entry<String, Object> entry : props.entrySet()) {
+            if (!entry.getKey().equals("type") && !entry.getKey().equals("name")) {
+                resource.put(entry.getKey(), entry.getValue());
+            }
+        }
         return resource;
     }
 }
