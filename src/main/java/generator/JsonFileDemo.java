@@ -46,23 +46,15 @@ public class JsonFileDemo {
             System.out.println("✓ Modèle créé:");
             System.out.println("  Provider: " + infra.getProvider());
             System.out.println("  Ressources: " + infra.getResources().size());
+            System.out.println("  Note: Validation effectuée avant création (fail-fast)");
             
-            // Étape 2: Valider le modèle
-            System.out.println("\n[Étape 2] Validation du modèle...");
-            boolean isValid = modelGen.validateModel(infra);
-            System.out.println("✓ Validation: " + (isValid ? "PASSÉ" : "ÉCHOUÉ"));
-            
-            if (!isValid) {
-                System.err.println("⚠️  Le modèle n'est pas valide. Vérifiez les contraintes.");
-            }
-            
-            // Étape 3: Générer Terraform
-            System.out.println("\n[Étape 3] Génération du code Terraform...");
+            // Étape 2: Générer Terraform
+            System.out.println("\n[Étape 2] Génération du code Terraform...");
             TerraformGenerator tfGen = new TerraformGenerator();
             String terraform = tfGen.generate(infra);
             
-            // Étape 4: Sauvegarder
-            System.out.println("\n[Étape 4] Sauvegarde du code Terraform...");
+            // Étape 3: Sauvegarder
+            System.out.println("\n[Étape 3] Sauvegarde du code Terraform...");
             Files.write(Paths.get(outputFile), terraform.getBytes());
             System.out.println("✓ Code Terraform sauvegardé dans : " + outputFile);
             

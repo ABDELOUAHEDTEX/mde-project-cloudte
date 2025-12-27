@@ -79,14 +79,10 @@ public class CloudInfraGenDemo {
         System.out.println("✓ Model created:");
         System.out.println("  Provider: " + infra.getProvider());
         System.out.println("  Resources: " + infra.getResources().size());
+        System.out.println("  Note: Model validation was performed before creation (fail-fast)");
         
-        // Step 2: Validate Model
-        System.out.println("\n[Step 2] Validating Model...");
-        boolean isValid = modelGen.validateModel(infra);
-        System.out.println("✓ Model validation: " + (isValid ? "PASSED" : "FAILED"));
-        
-        // Step 3: Generate Terraform
-        System.out.println("\n[Step 3] Generating Terraform Code...");
+        // Step 2: Generate Terraform
+        System.out.println("\n[Step 2] Generating Terraform Code...");
         TerraformGenerator tfGen = new TerraformGenerator();
         String terraformCode = tfGen.generate(infra);
         
@@ -95,11 +91,11 @@ public class CloudInfraGenDemo {
         System.out.println(terraformCode);
         System.out.println("-".repeat(80));
         
-        // Step 4: Save model to file (optional)
+        // Step 3: Save model to file (optional)
         try {
             String modelPath = "output/model.xmi";
             modelGen.saveModel(infra, modelPath);
-            System.out.println("\n[Step 4] Model saved to: " + modelPath);
+            System.out.println("\n[Step 3] Model saved to: " + modelPath);
         } catch (Exception e) {
             System.err.println("Warning: Could not save model: " + e.getMessage());
         }
