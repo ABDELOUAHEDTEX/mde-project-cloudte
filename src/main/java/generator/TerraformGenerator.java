@@ -49,6 +49,14 @@ public class TerraformGenerator {
         // Generate resources
         for (CloudResource resource : infra.getResources()) {
             generateResource(pw, resource, provider);
+            
+            // If resource is a VPC, also generate its contained subnets
+            if (resource instanceof VPC) {
+                VPC vpc = (VPC) resource;
+                for (Subnet subnet : vpc.getSubnets()) {
+                    generateSubnet(pw, subnet, provider);
+                }
+            }
         }
         
         return sw.toString();
