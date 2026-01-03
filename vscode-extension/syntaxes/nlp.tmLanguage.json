@@ -1,0 +1,136 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "CloudInfraGen NLP",
+  "patterns": [
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#resources"
+    },
+    {
+      "include": "#providers"
+    },
+    {
+      "include": "#attributes"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#comments"
+    }
+  ],
+  "repository": {
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.nlp",
+          "match": "\\b(create|add|deploy|configure|setup|with|in|on|for|to|from|using|via|connect|link|attach|enable|disable|allow|deny)\\b",
+          "caseSensitive": false
+        }
+      ]
+    },
+    "resources": {
+      "patterns": [
+        {
+          "name": "entity.name.type.resource.compute.nlp",
+          "match": "\\b(EC2|ComputeInstance|compute instance|virtual machine|VM|server|instance|web server|app server)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.storage.nlp",
+          "match": "\\b(S3|StorageBucket|bucket|object storage|blob storage|EBS|Volume|volume|disk|EFS|FileSystem|file system|NFS|shared storage)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.database.nlp",
+          "match": "\\b(RDS|DatabaseInstance|database|MySQL|PostgreSQL|Postgres|SQL Server|Oracle|relational database|DynamoDB|NoSQL|MongoDB|Cassandra|document database)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.network.nlp",
+          "match": "\\b(VPC|Virtual Private Cloud|network|Subnet|subnet|sub-network|SecurityGroup|security group|firewall|SG|LoadBalancer|load balancer|LB|ELB|ALB|NLB|RouteTable|route table|NetworkInterface|network interface)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.container.nlp",
+          "match": "\\b(ECS|EKS|Kubernetes|K8s|container|Docker|ContainerService|container service|orchestration)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.serverless.nlp",
+          "match": "\\b(Lambda|function|FaaS|serverless|Azure Function|Cloud Function|Function)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.scaling.nlp",
+          "match": "\\b(AutoScalingGroup|auto scaling|autoscaling|ASG|scaling group)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.security.nlp",
+          "match": "\\b(IAM|IAMRole|IAM role|IAMPolicy|IAM policy|role|policy|Secret|secret|Secrets Manager)\\b",
+          "caseSensitive": false
+        },
+        {
+          "name": "entity.name.type.resource.monitoring.nlp",
+          "match": "\\b(MonitoringService|monitoring|CloudWatch|monitor|metrics|logging)\\b",
+          "caseSensitive": false
+        }
+      ]
+    },
+    "providers": {
+      "patterns": [
+        {
+          "name": "entity.name.type.provider.nlp",
+          "match": "\\b(AWS|Amazon Web Services|Azure|Microsoft Azure|GCP|Google Cloud Platform|Google Cloud)\\b",
+          "caseSensitive": false
+        }
+      ]
+    },
+    "attributes": {
+      "patterns": [
+        {
+          "name": "variable.other.property.nlp",
+          "match": "\\b(name|region|zone|availability zone|AZ|CIDR|cidr|IP|ip|address|port|protocol|OS|os|operating system|image|AMI|ami|instance type|size|capacity|engine|version|storage|encrypted|encryption|public|private|subnet|security group|tags|tag|min|max|desired|minSize|maxSize|desiredCapacity|cluster|container|image|runtime|trigger|throughput|replica|multi-AZ|multiAZ|versioning|publicAccess|inbound|outbound|rules|routes|assumeRole|actions|resources|key|metrics)\\b",
+          "caseSensitive": false
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.nlp",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.nlp",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.nlp",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.nlp",
+          "begin": "#",
+          "end": "$"
+        },
+        {
+          "name": "comment.block.nlp",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.nlp"
+}
+

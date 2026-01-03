@@ -19,6 +19,32 @@ resource "aws_vpc" "ecommerce-vpc" {
   }
 }
 
+resource "aws_subnet" "public-subnet-1a" {
+  vpc_id     = ecommerce-vpc.id
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "us-east-1a"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "public-subnet-1b" {
+  vpc_id     = ecommerce-vpc.id
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "us-east-1b"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_subnet" "private-subnet-1a" {
+  vpc_id     = ecommerce-vpc.id
+  cidr_block = "10.0.11.0/24"
+  availability_zone = "us-east-1a"
+}
+
+resource "aws_subnet" "private-subnet-1b" {
+  vpc_id     = ecommerce-vpc.id
+  cidr_block = "10.0.12.0/24"
+  availability_zone = "us-east-1b"
+}
+
 resource "aws_security_group" "web-sg" {
   name = "web-sg"
   ingress {
@@ -42,6 +68,11 @@ resource "aws_security_group" "db-sg" {
   }
 }
 
+resource "aws_lb" "web-alb" {
+  name = "web-alb"
+  load_balancer_type = "LoadBalancer"
+}
+
 resource "aws_instance" "web-server-template" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
@@ -55,6 +86,7 @@ resource "aws_instance" "web-server-template" {
 resource "aws_autoscaling_group" "web-asg" {
   min_size         = 2
   max_size         = 6
+  desired_capacity = 3
   launch_template {
     id = web-server-template.id
   }

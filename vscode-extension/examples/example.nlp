@@ -1,0 +1,26 @@
+# Example CloudInfraGen NLP file
+# This file demonstrates the NLP language syntax
+
+Create a 3-tier architecture with:
+
+1. Web tier:
+   - Load balancer: app-lb
+   - EC2 instances: web-servers
+   - Security group: web-sg (allow HTTP:80, HTTPS:443)
+
+2. Application tier:
+   - EC2 instances: app-servers
+   - Security group: app-sg (allow from web tier)
+
+3. Database tier:
+   - RDS database: app-db (MySQL 8.0)
+   - Security group: db-sg (allow from app tier)
+
+4. Network:
+   - VPC: main-vpc (10.0.0.0/16)
+   - Public subnet: public-subnet (10.0.1.0/24)
+   - Private subnet: private-subnet (10.0.2.0/24)
+
+Region: us-east-1
+Provider: AWS
+

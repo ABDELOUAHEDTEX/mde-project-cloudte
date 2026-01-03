@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="ASCII"?>
 <cloudinfragen:Infrastructure xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cloudinfragen="http://www.cloudinfragen.com/metamodel" provider="AWS">
-  <resources xsi:type="cloudinfragen:VPC" id="2f99a5bf-b655-466a-8ad0-174b07623483" name="ecommerce-vpc" cidrBlock="10.0.0.0/16">
+  <resources xsi:type="cloudinfragen:VPC" id="5d752be7-4559-4327-b141-e1769649f942" name="ecommerce-vpc" cidrBlock="10.0.0.0/16">
     <tags>Environment=Production</tags>
-    <subnets id="641b4a5f-e75b-4406-924d-a28b960d3280" name="public-subnet-1a" cidr="10.0.1.0/24" typeSubnet="public" availabilityZone="us-east-1a"/>
-    <subnets id="35b01eb5-13af-4c53-8380-5eeaa9892fcf" name="public-subnet-1b" cidr="10.0.2.0/24" typeSubnet="public" availabilityZone="us-east-1b"/>
-    <subnets id="a8b53638-9d45-4c30-b3ba-c7e205922dfd" name="private-subnet-1a" cidr="10.0.11.0/24" typeSubnet="private" availabilityZone="us-east-1a"/>
-    <subnets id="e6aff094-ef02-48e9-b856-fab6fe2c6246" name="private-subnet-1b" cidr="10.0.12.0/24" typeSubnet="private" availabilityZone="us-east-1b"/>
+    <subnets id="c22e4f34-a466-445e-bfba-26a034d18128" name="public-subnet-1a" cidr="10.0.1.0/24" typeSubnet="public" availabilityZone="us-east-1a"/>
+    <subnets id="0c5a33b2-3d43-48bc-a158-1e69438ba37f" name="public-subnet-1b" cidr="10.0.2.0/24" typeSubnet="public" availabilityZone="us-east-1b"/>
+    <subnets id="37525a2f-3a48-4993-9a2a-9e8c122f6189" name="private-subnet-1a" cidr="10.0.11.0/24" typeSubnet="private" availabilityZone="us-east-1a"/>
+    <subnets id="9de7e25b-70d7-482e-a5e2-2defdb0108e5" name="private-subnet-1b" cidr="10.0.12.0/24" typeSubnet="private" availabilityZone="us-east-1b"/>
   </resources>
-  <resources xsi:type="cloudinfragen:SecurityGroup" id="2ecab480-058a-4e3c-9eb3-fe686b507f3f" name="web-sg">
+  <resources xsi:type="cloudinfragen:SecurityGroup" id="57102af2-f12c-4385-9697-5d3f59e03b43" name="web-sg">
     <inboundRules>HTTP:80</inboundRules>
     <inboundRules>HTTPS:443</inboundRules>
     <outboundRules>ALL:0</outboundRules>
   </resources>
-  <resources xsi:type="cloudinfragen:SecurityGroup" id="331c9704-cde2-4670-a9c1-53d59d7401b5" name="db-sg">
+  <resources xsi:type="cloudinfragen:SecurityGroup" id="687c794d-5591-4149-8aba-c5be8736219d" name="db-sg">
     <inboundRules>MySQL:3306</inboundRules>
   </resources>
-  <resources xsi:type="cloudinfragen:ComputeInstance" id="ac7ce3c3-163f-4db5-8a25-f1ba4f723466" name="web-server-template" os="amazon-linux-2" securityGroups="2ecab480-058a-4e3c-9eb3-fe686b507f3f">
+  <resources xsi:type="cloudinfragen:LoadBalancer" id="84f78135-7eae-48bc-b2eb-a408f192d181" name="web-alb" type="LoadBalancer"/>
+  <resources xsi:type="cloudinfragen:ComputeInstance" id="0907d85e-44dd-4a78-ba7d-6fa8c4850db1" name="web-server-template" os="amazon-linux-2" securityGroups="57102af2-f12c-4385-9697-5d3f59e03b43">
     <tags>Role=WebServer</tags>
   </resources>
-  <resources xsi:type="cloudinfragen:AutoScalingGroup" id="d3744396-5f76-43ed-a2e5-d6d67c26f664" name="web-asg" minSize="2" maxSize="6" template="ac7ce3c3-163f-4db5-8a25-f1ba4f723466"/>
-  <resources xsi:type="cloudinfragen:DatabaseInstance" id="3ce2dba2-2184-40ad-8c26-ecb00c0ca761" name="ecommerce-db" engine="mysql" version="8.0.35" storageSize="100" multiAZ="true" securityGroups="331c9704-cde2-4670-a9c1-53d59d7401b5">
+  <resources xsi:type="cloudinfragen:AutoScalingGroup" id="89c34e86-7438-4805-a82e-dac3b34fbfb8" name="web-asg" minSize="2" maxSize="6" desiredCapacity="3" template="0907d85e-44dd-4a78-ba7d-6fa8c4850db1"/>
+  <resources xsi:type="cloudinfragen:DatabaseInstance" id="f3d6fd6b-8be0-4d35-b3c5-1dbf32d06f7a" name="ecommerce-db" engine="mysql" version="8.0.35" storageSize="100" multiAZ="true" securityGroups="687c794d-5591-4149-8aba-c5be8736219d">
     <tags>Environment=Production</tags>
   </resources>
-  <resources xsi:type="cloudinfragen:NoSQLDatabase" id="6e3d6d56-740e-4199-8f39-dab856a85e41" name="shopping-cart" engine="dynamodb" throughputCapacity="10" replicaCount="1"/>
-  <resources xsi:type="cloudinfragen:StorageBucket" id="fd2b6c37-2af4-4a8d-a7c6-311cefef804a" name="product-images" versioning="true"/>
-  <resources xsi:type="cloudinfragen:Function" id="7142a0c7-1715-4541-aa32-b2a7e826c960" name="order-processor" runtime="python3.11" trigger="api-gateway"/>
-  <resources xsi:type="cloudinfragen:MonitoringService" id="ef9c6078-cbd6-46f1-963a-8c107a06762e" name="cloudwatch">
+  <resources xsi:type="cloudinfragen:NoSQLDatabase" id="cdd49919-1ee4-40f5-8e85-187fcb82214a" name="shopping-cart" engine="dynamodb" throughputCapacity="10" replicaCount="1"/>
+  <resources xsi:type="cloudinfragen:StorageBucket" id="955be3b8-c3ad-401f-95e5-ecf739a3d819" name="product-images" versioning="true"/>
+  <resources xsi:type="cloudinfragen:Function" id="78cdcaf3-17f5-447c-83d7-1f7ed3c86411" name="order-processor" runtime="python3.11" trigger="api-gateway"/>
+  <resources xsi:type="cloudinfragen:MonitoringService" id="8b5dc468-75af-4fb9-84ab-2a16006b14a9" name="cloudwatch">
     <metrics>CPUUtilization</metrics>
     <metrics>RequestCount</metrics>
   </resources>

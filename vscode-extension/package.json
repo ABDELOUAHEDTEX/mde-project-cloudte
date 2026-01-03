@@ -1,0 +1,121 @@
+{
+  "name": "cloudinfragen",
+  "displayName": "CloudInfraGen",
+  "description": "Generate cloud infrastructure models and Terraform code from natural language",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:cloudinfragen.generate",
+    "onCommand:cloudinfragen.generateFromFile",
+    "onLanguage:nlp"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "nlp",
+        "aliases": [
+          "CloudInfraGen NLP",
+          "nlp"
+        ],
+        "extensions": [
+          ".nlp"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "nlp",
+        "scopeName": "source.nlp",
+        "path": "./syntaxes/nlp.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "nlp",
+        "path": "./snippets/nlp.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "cloudinfragen.generate",
+        "title": "Generate Infrastructure from JSON"
+      },
+      {
+        "command": "cloudinfragen.generateFromFile",
+        "title": "Generate Infrastructure from File"
+      },
+      {
+        "command": "cloudinfragen.validateSetup",
+        "title": "Validate Java/Maven Setup"
+      },
+      {
+        "command": "cloudinfragen.showOutput",
+        "title": "Show Output Channel"
+      },
+      {
+        "command": "cloudinfragen.generateFromNLP",
+        "title": "Generate Terraform",
+        "icon": "$(play)"
+      },
+      {
+        "command": "cloudinfragen.openSplitView",
+        "title": "Open Split View"
+      }
+    ],
+    "views": {
+      "cloudinfragen": [
+        {
+          "id": "cloudinfragen.preview",
+          "name": "Infrastructure Preview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CloudInfraGen",
+      "properties": {
+        "cloudinfragen.javaPath": {
+          "type": "string",
+          "default": "java",
+          "description": "Path to Java executable"
+        },
+        "cloudinfragen.mavenPath": {
+          "type": "string",
+          "default": "mvn",
+          "description": "Path to Maven executable"
+        },
+        "cloudinfragen.projectPath": {
+          "type": "string",
+          "default": "${workspaceFolder}/..",
+          "description": "Path to CloudInfraGen Java project (relative to extension folder)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4",
+    "@vscode/vsce": "^2.22.0"
+  },
+  "dependencies": {}
+}
+

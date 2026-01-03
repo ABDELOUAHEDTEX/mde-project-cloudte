@@ -1,0 +1,178 @@
+{
+  "3-tier Architecture": {
+    "prefix": "3tier",
+    "body": [
+      "Create a 3-tier architecture with:",
+      "",
+      "1. Web tier:",
+      "   - Load balancer: ${1:app-lb}",
+      "   - EC2 instances: ${2:web-servers}",
+      "   - Security group: ${3:web-sg} (allow HTTP:80, HTTPS:443)",
+      "",
+      "2. Application tier:",
+      "   - EC2 instances: ${4:app-servers}",
+      "   - Security group: ${5:app-sg} (allow from web tier)",
+      "",
+      "3. Database tier:",
+      "   - RDS database: ${6:app-db} (MySQL 8.0)",
+      "   - Security group: ${7:db-sg} (allow from app tier)",
+      "",
+      "4. Network:",
+      "   - VPC: ${8:main-vpc} (10.0.0.0/16)",
+      "   - Public subnet: ${9:public-subnet} (10.0.1.0/24)",
+      "   - Private subnet: ${10:private-subnet} (10.0.2.0/24)",
+      "",
+      "Region: ${11|us-east-1,us-west-2,eu-west-1|}",
+      "Provider: AWS"
+    ],
+    "description": "3-tier architecture template"
+  },
+  "Serverless Architecture": {
+    "prefix": "serverless",
+    "body": [
+      "Create a serverless architecture with:",
+      "",
+      "1. API Gateway:",
+      "   - REST API endpoint",
+      "",
+      "2. Lambda functions:",
+      "   - Function: ${1:api-handler} (Python 3.9, HTTP trigger)",
+      "   - Function: ${2:data-processor} (Node.js, event trigger)",
+      "",
+      "3. Storage:",
+      "   - S3 bucket: ${3:data-bucket} (versioning enabled)",
+      "   - DynamoDB table: ${4:data-table}",
+      "",
+      "4. IAM:",
+      "   - IAM role: ${5:lambda-role}",
+      "   - IAM policy: ${6:lambda-policy}",
+      "",
+      "5. Monitoring:",
+      "   - CloudWatch monitoring",
+      "",
+      "Region: ${7|us-east-1,us-west-2,eu-west-1|}",
+      "Provider: AWS"
+    ],
+    "description": "Serverless architecture template"
+  },
+  "Microservices Architecture": {
+    "prefix": "microservices",
+    "body": [
+      "Create a microservices architecture with:",
+      "",
+      "1. Container orchestration:",
+      "   - EKS cluster: ${1:app-cluster}",
+      "   - Container service: ${2:api-service} (image: ${3:api:latest}, containers: 3)",
+      "   - Container service: ${4:worker-service} (image: ${5:worker:latest}, containers: 2)",
+      "",
+      "2. Load balancing:",
+      "   - Application load balancer: ${6:app-alb}",
+      "",
+      "3. Databases:",
+      "   - RDS PostgreSQL: ${7:api-db}",
+      "   - DynamoDB: ${8:cache-db}",
+      "",
+      "4. Storage:",
+      "   - S3 bucket: ${9:assets-bucket}",
+      "",
+      "5. Network:",
+      "   - VPC: ${10:main-vpc} (10.0.0.0/16)",
+      "   - Subnets: ${11:app-subnets}",
+      "   - Security groups: ${12:app-sg}",
+      "",
+      "6. Auto-scaling:",
+      "   - Auto scaling group: ${13:api-asg} (min: 2, max: 10, desired: 3)",
+      "",
+      "Region: ${14|us-east-1,us-west-2,eu-west-1|}",
+      "Provider: AWS"
+    ],
+    "description": "Microservices architecture template"
+  },
+  "Simple Web Application": {
+    "prefix": "webapp",
+    "body": [
+      "Create a simple web application with:",
+      "",
+      "1. Compute:",
+      "   - EC2 instance: ${1:web-server} (Linux, in subnet ${2:public-subnet})",
+      "   - Security group: ${3:web-sg} (allow HTTP:80, HTTPS:443)",
+      "",
+      "2. Storage:",
+      "   - S3 bucket: ${4:static-assets}",
+      "",
+      "3. Network:",
+      "   - VPC: ${5:main-vpc} (10.0.0.0/16)",
+      "   - Public subnet: ${6:public-subnet} (10.0.1.0/24)",
+      "",
+      "Region: ${7|us-east-1,us-west-2,eu-west-1|}",
+      "Provider: AWS"
+    ],
+    "description": "Simple web application template"
+  },
+  "VPC": {
+    "prefix": "vpc",
+    "body": [
+      "Create VPC: ${1:main-vpc}",
+      "CIDR: ${2:10.0.0.0/16}",
+      "Region: ${3|us-east-1,us-west-2,eu-west-1|}"
+    ],
+    "description": "Create a VPC"
+  },
+  "EC2 Instance": {
+    "prefix": "ec2",
+    "body": [
+      "Create EC2 instance: ${1:web-server}",
+      "OS: ${2|Linux,Windows|}",
+      "Subnet: ${2:public-subnet}",
+      "Security groups: ${3:web-sg}",
+      "Region: ${4|us-east-1,us-west-2,eu-west-1|}"
+    ],
+    "description": "Create an EC2 instance"
+  },
+  "RDS Database": {
+    "prefix": "rds",
+    "body": [
+      "Create RDS database: ${1:app-db}",
+      "Engine: ${2|MySQL,PostgreSQL,SQL Server,Oracle|}",
+      "Version: ${3:8.0}",
+      "Storage: ${4:20} GB",
+      "Multi-AZ: ${5|true,false|}",
+      "Subnet: ${6:private-subnet}",
+      "Security groups: ${7:db-sg}",
+      "Region: ${8|us-east-1,us-west-2,eu-west-1|}"
+    ],
+    "description": "Create an RDS database"
+  },
+  "Lambda Function": {
+    "prefix": "lambda",
+    "body": [
+      "Create Lambda function: ${1:api-handler}",
+      "Runtime: ${2|python3.9,nodejs18.x,java11|}",
+      "Trigger: ${3|HTTP,Event,Schedule|}",
+      "IAM role: ${4:lambda-role}",
+      "Region: ${5|us-east-1,us-west-2,eu-west-1|}"
+    ],
+    "description": "Create a Lambda function"
+  },
+  "S3 Bucket": {
+    "prefix": "s3",
+    "body": [
+      "Create S3 bucket: ${1:data-bucket}",
+      "Versioning: ${2|enabled,disabled|}",
+      "Public access: ${3|false,true|}",
+      "Region: ${4|us-east-1,us-west-2,eu-west-1|}"
+    ],
+    "description": "Create an S3 bucket"
+  },
+  "Security Group": {
+    "prefix": "sg",
+    "body": [
+      "Create security group: ${1:web-sg}",
+      "Inbound rules: ${2|HTTP:80,HTTPS:443,SSH:22|}",
+      "Outbound rules: ${3|ALL|}",
+      "VPC: ${4:main-vpc}"
+    ],
+    "description": "Create a security group"
+  }
+}
+
